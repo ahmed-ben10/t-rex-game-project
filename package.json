@@ -1,0 +1,9 @@
+{
+  "name": "t-rex-game-project",
+  "version": "1.0.0",
+  "description": "This is a t-rex game",
+  "main": "index.js",
+  "repository": "https://github.com/ahmed-ben10/t-rex-game-project.git",
+  "author": "Ahmed ben <302267915@student.rocmondriaan.nl>",
+  "license": "MIT"
+}

@@ -3,7 +3,6 @@ canvas.width = window.innerWidth - 2;
 canvas.height = window.innerHeight - 6;
 var c = canvas.getContext('2d');
 
-
 var player;
 var obstacle = [];
 var keyUp = false;
@@ -18,7 +17,7 @@ function animate(){
     player.update(keyUp);
     for (let i = 0; i < obstacle.length; i++) {
         obstacle[i].update();
-        let theDistance = distance(player.x, player.y, obstacle[i].x, obstacle[i].y) < player.w+ obstacle[i].w -15;
+        let theDistance = distance(player.x, player.y, obstacle[i].x, obstacle[i].y) < player.w;
         player.checkIfTouchObstacle(theDistance);
         stopGame(theDistance)
     }
@@ -28,17 +27,15 @@ function init(){
     obstacle = [];
     player = new Player(50,300,10, 50,50,c);
     for (let i = 0; i < 20 ; i++) {
-        let x =  (i+1)*300;
+        let x =  (i+1)*500;
         obstacle.push(new Obstacle(x,300,c)); 
-        console.log(obstacle)
     }
     window.addEventListener('keydown',(e)=> {
         switch (e.keyCode) {
-            case 27:
-                init();
-                break;
             case 32:
-                keyUp= true;
+            case 38:
+                if(!player.GameOver) keyUp= true;
+                else init();
                 break;
             default:
                 keyUp = false;

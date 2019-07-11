@@ -6,6 +6,8 @@ class Player{
         this.w = w;
         this.h = h;
         this.c = c;
+        this.score = 0; 
+        this.highScore = 0;
         this.vy = vy;
         this.maxJumpHeight = y - h*2;
         this.isJumping = false;
@@ -19,17 +21,30 @@ class Player{
         this.c.fillStyle = 'rgb(0,0,255)';
         document.getElementById('x').innerHTML = this.x+"-"+ this.y;
         this.c.fillRect(this.x,this.y,this.w,this.h);
+        this.drawText();
     }
 
+    drawText(){
+        this.c.font = '30px serif';
+        let score = Math.floor(this.score).toString();
+        for( let i = 8; i>score.length; i--) score = "0"+score;          let scoreDisplay = score;
+        this.c.fillText(scoreDisplay , innerWidth-400, 90);
+        c.fill();
+    }
     update(keyUp){
         if(!this.touchedObstacle){
             if(keyUp)this.isJumping = true;
             if(this.isJumping && !this.checkReachedTop) this.jump();
             else this.jumpBack();
             if(!this.isJumping) this.jumpBack();
+            this.setScore();
             this.draw(); 
         } else this.draw();
         
+    }
+
+    setScore(){
+        this.score+= 0.3;
     }
 
     jump(){
