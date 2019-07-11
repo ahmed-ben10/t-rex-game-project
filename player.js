@@ -1,13 +1,13 @@
 class Player{
 
-    constructor(x, y,vy, w, h, c){
+    constructor(x, y,vy, w, h,hs, c){
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.c = c;
         this.score = 0; 
-        this.highScore = 0;
+        this.highScore = hs;
         this.vy = vy;
         this.maxJumpHeight = y - h*2;
         this.isJumping = false;
@@ -19,18 +19,21 @@ class Player{
     draw(){
         this.c.beginPath();
         this.c.fillStyle = 'rgb(0,0,255)';
-        document.getElementById('x').innerHTML = this.x+"-"+ this.y;
         this.c.fillRect(this.x,this.y,this.w,this.h);
         this.drawText();
     }
 
     drawText(){
-        this.c.font = '30px serif';
+        this.c.font = '25px serif';
         let score = Math.floor(this.score).toString();
-        for( let i = 8; i>score.length; i--) score = "0"+score;          let scoreDisplay = score;
-        this.c.fillText(scoreDisplay , innerWidth-400, 90);
-        c.fill();
+        let highScore = Math.floor(this.highScore).toString();
+        for( let i = 7; i> highScore.length; i--) highScore = "0"+highScore;          
+        for( let i = 7; i>score.length; i--) score = "0"+score;          
+        let scoreDisplay = "HI "+highScore+" "+ score;
+        this.c.fillText(scoreDisplay , innerWidth-200, 90);
+        this.c.fill();
     }
+
     update(keyUp){
         if(!this.touchedObstacle){
             if(keyUp)this.isJumping = true;
@@ -39,12 +42,18 @@ class Player{
             if(!this.isJumping) this.jumpBack();
             this.setScore();
             this.draw(); 
-        } else this.draw();
+        } else {
+             this.draw();
+        }
         
     }
 
     setScore(){
         this.score+= 0.3;
+    }
+
+    setHighScore(){
+        if(this.score > this.highScore) return this.score;
     }
 
     jump(){
