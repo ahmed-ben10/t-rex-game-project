@@ -9,21 +9,33 @@ class Player{
         this.score = 0; 
         this.highScore = hs;
         this.vy = vy;
+        this.isRunning = false;
+        this.numRunning = 1
         this.maxJumpHeight = y - h*2;
         this.isJumping = false;
         this.reachedTop = false;
         this.checkReachedTop = false;
         this.startPlace = y;
+        this.image = new Image();
     }
 
     draw(){
         this.c.beginPath();
-        this.c.fillStyle = 'rgb(0,0,255)';
-        this.c.fillRect(this.x,this.y,this.w,this.h);
-        this.drawText();
+        this.drawImage();
+        this.drawScore();
     }
 
-    drawText(){
+    drawImage(){
+        if(this.isRunning){
+            this.image.src ="./assets/dino_run"+this.numRunning+".png";
+            if(this.numRunning == 1) this.numRunning +=1;
+            else this.numRunning =1;
+        } else  this.image.src ="./assets/dino.png";
+        this.c.drawImage(this.image,this.x,this.y, this.w, this.h);
+    }
+
+    drawScore(){
+        this.c.fillStyle = 'rgb(0,0,0)';
         this.c.font = '25px serif';
         let score = Math.floor(this.score).toString();
         let highScore = Math.floor(this.highScore).toString();
@@ -36,6 +48,7 @@ class Player{
 
     update(keyUp){
         if(!this.touchedObstacle){
+            this.isRunning = true;
             if(keyUp)this.isJumping = true;
             if(this.isJumping && !this.checkReachedTop) this.jump();
             else this.jumpBack();
@@ -43,6 +56,7 @@ class Player{
             this.setScore();
             this.draw(); 
         } else {
+            this.isRunning = false;
              this.draw();
         }
         
