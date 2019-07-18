@@ -2,8 +2,8 @@ class Obstacle{
     constructor(x,y,img, c){
         this.x = x;
         this.y = y;
-        this.w = 70;
-        this.h = 70;
+        this.w = 50;
+        this.h = 50;
         this.c = c;
         this.speed = 25;
         this.gameOver = false;
