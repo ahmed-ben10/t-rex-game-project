@@ -11,7 +11,9 @@ class Main{
         this.beginGame = false;
         this.start();
         this.init();
-        this.animate();
+        setInterval(()=>this.animate(),50)
+         setInterval(()=> this.createObstacles(),1000);
+
     }
 
     setCanvas(){
@@ -22,15 +24,31 @@ class Main{
     }
 
     start(){
-        window.addEventListener('keyup',()=> this.beginGame = true);
+        window.addEventListener('keyup',()=> this.beginGame= true);
     }
 
     init(){
         this.i = 0;
         this.obstacle = [];
         this.numOfObstacles = 3;
-        this.player = new Player(this.canvas.width/10,this.canvas.height/2,10, 50,50,this.highScore,this.c);
+        this.player = new Player(this.canvas.width/6,this.canvas.height/2.1,35, 70,70,this.highScore,this.c);
         this.createObstacles();
+        this.eventListeners();
+    }
+    
+    animate(){
+        this.clearCanvas();
+        this.background();
+        this.createLine();
+        if(this.beginGame) {
+            this.player.update(this.keyUp);
+            if(Math.floor(this.player.score) % 100 == 0) this.setObstacleSpeed();
+        }
+        else  this.player.draw();
+        this.addObstacles();
+    }
+    
+    eventListeners(){
         window.addEventListener('resize',()=> {
             this.setCanvas();
             this.init()
@@ -51,18 +69,7 @@ class Main{
             if( this.player.GameOver && e.keyCode == 82) this.init();
         });
     }
-    
-    animate(){
-        requestAnimationFrame(()=>this.animate());
-        this.clearCanvas();
-        this.background();
-        this.createLine();
-        if(this.beginGame) this.player.update(this.keyUp);
-        else  this.player.draw();
-        this.addObstacles();
-        if(this.beginGame) setTimeout(this.createObstacles(),10000);
-    }
-    
+
     clearCanvas(){
         this.c.clearRect(0, 0, innerWidth, innerHeight);
     }
@@ -75,12 +82,16 @@ class Main{
     }
 
     createObstacles(){
-        this.numOfObstacles+= 1;
-        while (this.i < this.numOfObstacles) {
-            let x =  (this.i+1)*500 -Math.random()*300;
-            if(this.i == 0)  x =(this.i+1)*500;
-            this.obstacle.push(new Obstacle(x,this.canvas.height/2,this.c)); 
-            this.i++
+        if(this.beginGame){
+            this.numOfObstacles+= 1;
+            while (this.i < this.numOfObstacles) {
+                let x =  (this.i+1)*500 - Math.random()*100 + innerWidth;
+                let obstacleImg = new Image();
+                let obstacleNum = Math.floor(Math.random()*4+1);
+                obstacleImg.src = "./assets/obstacle/spike_0"+obstacleNum+".png";
+                this.obstacle.push(new Obstacle(x,this.canvas.height/2.1,obstacleImg,this.c)); 
+                this.i++
+            }
         }
     }
 
@@ -88,10 +99,15 @@ class Main{
         for (let i = 0; i < this.obstacle.length; i++) {
             if(this.beginGame) this.obstacle[i].update();
             else this.obstacle[i].draw();
-            let theDistance = this.distance(this.player.x, this.player.y, this.obstacle[i].x, this.obstacle[i].y) < this.player.w;
+            let i2 = i-1;
+            let theDistance = this.distance(this.player.x, this.player.y, this.obstacle[i].x, this.obstacle[i].y) < this.player.w ;
             this.player.checkIfTouchObstacle(theDistance);
             this.stopGame(theDistance);
         }
+    }
+
+    setObstacleSpeed(){
+        for (let i = 0; i < this.obstacle.length; i++) this.obstacle[i].speed+=1;
     }
 
     distance(x1, y1, x2, y2) {
@@ -125,5 +141,26 @@ class Main{
         this.c.fillText("PRESS (R) KEY TO PLAY AGAIN",innerWidth/2.95, innerHeight/2.5);
     }
 }
+var a=new Main();
 
-new Main();
+window.addEventListener('keydown',(e)=> {
+    switch (e.keyCode) {
+        case 39:
+            a.player.x+=10;
+            break;
+        case 37:
+            a.player.x-=10;
+            break;
+         case 38:
+            a.player.y-=10;
+            break;
+        case 40:
+            a.player.y+=10;
+            break;
+        default:
+            this.keyUp = false;
+            break;   
+
+        }
+        console.log(a.obstacle.length)
+});

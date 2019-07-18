@@ -11,7 +11,7 @@ class Player{
         this.vy = vy;
         this.isRunning = false;
         this.numRunning = 1
-        this.maxJumpHeight = y - h*2;
+        this.maxJumpHeight = y - h*2.5;
         this.isJumping = false;
         this.reachedTop = false;
         this.checkReachedTop = false;
@@ -26,11 +26,12 @@ class Player{
     }
 
     drawImage(){
-        if(this.isRunning){
-            this.image.src ="./assets/dino_run"+this.numRunning+".png";
+        if(this.isJumping) this.image.src = "./assets/dino/dino.png";
+        else if(this.isRunning){
+            this.image.src ="./assets/dino/dino_run"+this.numRunning+".png";
             if(this.numRunning == 1) this.numRunning +=1;
             else this.numRunning =1;
-        } else  this.image.src ="./assets/dino.png";
+        } else  this.image.src ="./assets/dino/dino.png";
         this.c.drawImage(this.image,this.x,this.y, this.w, this.h);
     }
 
@@ -63,7 +64,7 @@ class Player{
     }
 
     setScore(){
-        this.score+= 0.3;
+        this.score+= 1;
     }
 
     setHighScore(){
@@ -73,12 +74,12 @@ class Player{
     jump(){
         this.reachedTop = this.y >= this.maxJumpHeight;
         if(!this.reachedTop) this.checkReachedTop = true;
-        if(this.reachedTop) this.y-= this.vy*0.5;
+        if(this.reachedTop) this.y-= this.vy;
         else this.isJumping = true;  
     }
 
     jumpBack(){  
-        if(this.y < this.startPlace) this.y+=this.vy*0.3;
+        if(this.y < this.startPlace) this.y+=this.vy;
         else {this.isJumping= false; this.checkReachedTop = false};
     }
 

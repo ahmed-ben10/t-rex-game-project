@@ -1,18 +1,17 @@
 class Obstacle{
-    constructor(x,y, c){
+    constructor(x,y,img, c){
         this.x = x;
         this.y = y;
-        this.w = 10;
-        this.h = 50;
+        this.w = 70;
+        this.h = 70;
         this.c = c;
-        this.speed = 5;
+        this.speed = 25;
         this.gameOver = false;
+        this.obstacleImg = img;
     }
 
     draw(){
-        this.c.beginPath();
-        this.c.fillStyle = 'rgb(255,0,0)';
-        this.c.fillRect(this.x, this.y, this.w, this.h);
+        this.c.drawImage(this.obstacleImg,this.x, this.y, this.w, this.h);
     }
 
     update() {
